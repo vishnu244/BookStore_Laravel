@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,15 @@ Route::post('resetPassword',[PasswordController::class,'resetPassword']);
 Route::POST('registration',[UserController::class,'Registerdata']);
 Route::POST('login',[UserController::class,'login']);
 Route::POST('logout',[UserController::class,'logout']);
+
+Route::POST('addBook',[BookController::class,'addBook']);
+Route::GET('displayBooks',[BookController::class,'display_Books']);
+Route::GET('displayBookbyID/{id}',[BookController::class,'display_Book_ID']);
+Route::POST('updateBookID/{id}',[BookController::class,'update_Book_ID']);
+Route::POST('updateBookQuantitybyID',[BookController::class,'addQuantityForExistingBook']);
+Route::delete('deleteBookID/{id}',[BookController::class,'delete_Book_ID']);
+
+
+
+
+
