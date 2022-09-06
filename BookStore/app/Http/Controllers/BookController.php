@@ -140,4 +140,34 @@ class BookController extends Controller
       
     }
 
+    public function searchBook(Request $request){
+        // $request->validate([
+        //     'value' => 'required'
+        // ]);
+        $data = $request->get('data');
+        $response = Book::where('name', 'like', "%{$data}%")->
+                                        orWhere('id', 'like', "%{$data}%")->
+                                        orWhere('author', $request->value)->get();
+        if($response){
+            return $response;
+        }
+        else{
+            // Log::channel('custom')->error("Book is not available");
+            return response()->json(['message'=>'No book Found with that ID'],404);
+
+        }
+    }
+
+
+    public function sortBooks_Price_LowToHigh(){
+        // $posts = Post::orderBy("id", "asc")->get();
+
+        $books = Book::select('*')->orderBy("id", "asc")->get();
+        return $books;
+    }
+
+    public function sortBook_Price_HighToLow(){
+        $books = Book::select('*')->orderBy("id", "desc")->get();
+        return $books;
+    }
 }

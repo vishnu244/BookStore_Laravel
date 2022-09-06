@@ -39,6 +39,9 @@ Route::POST('updateBookID/{id}',[BookController::class,'update_Book_ID']);
 Route::POST('updateBookQuantitybyID',[BookController::class,'addQuantityForExistingBook']);
 Route::delete('deleteBookID/{id}',[BookController::class,'delete_Book_ID']);
 
+Route::GET('searchBook',[BookController::class,'searchBook']);
+Route::GET('sortByPriceLowToHigh',[BookController::class,'sortBooks_Price_LowToHigh']);
+Route::GET('sortByPriceHighToLow',[BookController::class,'sortBook_Price_HighToLow']);
 
 
 
