@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Mail;
 class PasswordController extends Controller
 {
 
-
     /**
      * @OA\POST(
      *   path="/api/changePassword",

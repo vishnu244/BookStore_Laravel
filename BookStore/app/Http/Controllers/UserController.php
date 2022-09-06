@@ -10,10 +10,10 @@ class UserController extends Controller
 {
 
     /**
-     * @OA\POST(
+     * @OA\Post(
      *   path="/api/registration",
      *   summary="User Registration",
-     *   description="To Register the User has to enter his details like "FirstName,LastName,Email,Password and ConfirmPassword",
+     *   description="To Register the User has to enter his details",
      *   @OA\RequestBody(
      *         @OA\JsonContent(),
      *         @OA\MediaType(
@@ -24,9 +24,10 @@ class UserController extends Controller
      *               @OA\Property(property="role", type="string"),
      *               @OA\Property(property="first_name", type="string"),
      *               @OA\Property(property="last_name", type="string"),
-     *               @OA\Property(property="email", type="email"),
-     *               @OA\Property(property="password", type="password"),
-     *               @OA\Property(property="confirm_password", type="password"),
+     *               @OA\Property(property="email", type="string"),
+     *               @OA\Property(property="password", type="string"),
+     *               @OA\Property(property="confirm_password", type="string"),
+     *   
      *            ),
      *        ),
      *    ),
@@ -38,6 +39,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
+    
+
     //API for Registration
     public function Registerdata(Request $request)
     { 
@@ -47,7 +50,7 @@ class UserController extends Controller
             'last_name' => 'required|string',
             'email' => 'required|email|max:100|unique:users,email',
             'password' => 'required|string',
-            'confirm_password' => 'required|string',
+            'confirm_password' => 'required|string'
         ]);
         $user = User::create([
             'role' => $data['role'],
@@ -55,7 +58,7 @@ class UserController extends Controller
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'confirm_password' => Hash::make($data['confirm_password'])           
+            'confirm_password' => Hash::make($data['confirm_password']),           
         ]);
 
         $token = $user->createToken('Token')->plainTextToken;
@@ -71,7 +74,7 @@ class UserController extends Controller
     /**
      * @OA\Post(
      *   path="/api/login",
-     *   summary="login",
+     *   summary="User login",
      *   description="login to UI using Mail and Password",
      *   @OA\RequestBody(
      *         @OA\JsonContent(),
