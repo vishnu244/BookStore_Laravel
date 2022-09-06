@@ -10,6 +10,8 @@ use App\Mail\sendmail;
 use Illuminate\support\Facades\Auth;
 use Illuminate\support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+
 
 
 
@@ -91,7 +93,8 @@ class PasswordController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-//--- sending token to mail to change password -------
+
+    //API for sending token to mail to change password
     public function forgotPassword(Request $request)
     {  
         
