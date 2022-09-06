@@ -160,8 +160,6 @@ class BookController extends Controller
 
 
     public function sortBooks_Price_LowToHigh(){
-        // $posts = Post::orderBy("id", "asc")->get();
-
         $books = Book::select('*')->orderBy("id", "asc")->get();
         return $books;
     }
