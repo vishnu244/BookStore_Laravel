@@ -5,6 +5,157 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/displayBooks": {
+            "get": {
+                "summary": "Display Books",
+                "description": "display ALL Books ",
+                "operationId": "3d7cea23db0e68ab3435a184f6478c11",
+                "requestBody": {},
+                "responses": {
+                    "201": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "/api/displayBookbyID/{id}": {
+            "get": {
+                "summary": "Display Books by ID",
+                "description": "Display Book Based on ID",
+                "operationId": "2e2e54c14098df4bd4738fc635182091",
+                "requestBody": {},
+                "responses": {
+                    "201": {
+                        "description": "success"
+                    },
+                    "401": {
+                        "description": "No Book Found with That ID to Display"
+                    }
+                }
+            }
+        },
+        "/api/deleteBookID/{id}": {
+            "delete": {
+                "summary": "Delete Book",
+                "description": "Delete users Books by ID",
+                "operationId": "05655555edea94358171cf7233579f67",
+                "requestBody": {},
+                "responses": {
+                    "201": {
+                        "description": "Book Deleted Successfully"
+                    },
+                    "401": {
+                        "description": "No Book Found with that ID to Delete"
+                    }
+                }
+            }
+        },
+        "/api/updateBookQuantitybyID": {
+            "post": {
+                "summary": "Add Quantity to Existing Books",
+                "description": "Adding Quantity of Books based on ID",
+                "operationId": "7c2aadcf746730c6c7f08ec8f3af826b",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "Description"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Quantity of Books Updated Successfully"
+                    },
+                    "401": {
+                        "description": "No Book Found with that ID to Update"
+                    }
+                }
+            }
+        },
+        "/api/searchBook": {
+            "post": {
+                "summary": "Search Books",
+                "description": "Search Books based on name,id and author",
+                "operationId": "3102fe2b9869f32fc1d498fc0e4f9994",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "data"
+                                ],
+                                "properties": {
+                                    "data": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "No book Found with the entered Value"
+                    }
+                }
+            }
+        },
+        "/api/sortByPriceLowToHigh": {
+            "get": {
+                "summary": "Sort Books by price Low to High",
+                "description": "Sort Books Based on Price from Low to High",
+                "operationId": "874fed62ea226895914039fd43b5b231",
+                "requestBody": {},
+                "responses": {
+                    "201": {
+                        "description": "success"
+                    },
+                    "401": {
+                        "description": "No Book Found with That ID to Display"
+                    }
+                }
+            }
+        },
+        "/api/sortByPriceHighToLow": {
+            "get": {
+                "summary": "Sort Books by price High to Low",
+                "description": "Sort Books Based on Price from High to Low",
+                "operationId": "6a7db5f114710572ea8694791e2c470a",
+                "requestBody": {},
+                "responses": {
+                    "201": {
+                        "description": "success"
+                    },
+                    "401": {
+                        "description": "No Book Found with That ID to Display"
+                    }
+                }
+            }
+        },
         "/api/changePassword": {
             "post": {
                 "summary": "Change Password",
@@ -183,7 +334,7 @@
         },
         "/api/login": {
             "post": {
-                "summary": "login",
+                "summary": "User login",
                 "description": "login to UI using Mail and Password",
                 "operationId": "0fc9610184083ac6dddab2c63139225a",
                 "requestBody": {
