@@ -11,6 +11,8 @@ use Illuminate\support\Facades\Auth;
 use Illuminate\support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+
 
 
 
@@ -62,6 +64,7 @@ class PasswordController extends Controller
             
         }
         else{
+            //Log::channel('custom')->error("You have Entered the wrong password");
             return response()->json(['message'=>"Check your old password", 'status'=>400]);
         }
     }
@@ -104,6 +107,7 @@ class PasswordController extends Controller
         $email = $request->email;
         $user = User::where('email', $email)->first();
         if (!$user) {
+            //Log::channel('custom')->error("Email does not exists");
             return response()->json(['Message' => "Email does not exists", 'status' => 404]);
             
         } 
@@ -169,6 +173,7 @@ class PasswordController extends Controller
 
         $passwordReset = PasswordReset::where('token', $request->token)->first();
         if(!$passwordReset){
+            //Log::channel('custom')->error("You have entered invalid token");
             return response()->json(['message' => "Token is invalid "]);
         }
 

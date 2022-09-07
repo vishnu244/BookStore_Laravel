@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+
 
 class UserController extends Controller
 {
@@ -48,6 +50,7 @@ class UserController extends Controller
             'role' => 'required|string',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
+            'phoneNumber' => 'required|integer',
             'email' => 'required|email|max:100|unique:users,email',
             'password' => 'required|string',
             'confirm_password' => 'required|string'
@@ -56,6 +59,7 @@ class UserController extends Controller
             'role' => $data['role'],
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
+            'phoneNumber' => $data['phoneNumber'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'confirm_password' => Hash::make($data['confirm_password']),           
@@ -67,6 +71,7 @@ class UserController extends Controller
             'user'=>$user,
             'token'=>$token,
         ];
+        //Log::channel('custom')->info("Data Registered succesfully");
         return response($response,201);
     }
 
@@ -111,6 +116,7 @@ class UserController extends Controller
 
         if(!$user || !Hash::check($data['password'], $user->password))
         {
+            //Log::channel('custom')->error("Invalid Credentials to Login");
             return response(['message' => 'Invalid Credentials'], 401);
         }
         else
@@ -120,6 +126,7 @@ class UserController extends Controller
                 'user' => $user,
                 'token' => $token,
             ];
+            //Log::channel('custom')->info("Login succesfull");
             return response($response, 200);
         }
     }
@@ -129,6 +136,7 @@ class UserController extends Controller
     public function logout(Request $request){
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message'=>"User logged out successfully", "SussceeStatus"=>200]);
+        //Log::channel('custom')->info("Logged out succesfully");
     }
       
 }
