@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +45,15 @@ Route::post('searchBook',[BookController::class,'searchBook']);
 Route::GET('sortByPriceLowToHigh',[BookController::class,'sortBooks_Price_LowToHigh']);
 Route::GET('sortByPriceHighToLow',[BookController::class,'sortBook_Price_HighToLow']);
 
+Route::post('addBookTocart',[CartController::class, 'addBookTocart']);
+Route::post('deleteBookFromCart',[CartController::class, 'deleteBookFromCart']);
+Route::get('getAllBooks',[CartController::class, 'getAllBooks']);
+Route::post('updateBookInCart',[CartController::class, 'updateBookInCart']);
+Route::post('updateQuantityInCart',[CartController::class, 'updateQuantityInCart']);
 
+
+Route::post('addBookToWishlist', [WishlistController::class, 'addBookToWishlist']);
+Route::get('getAllBooksFromWishlists', [WishlistController::class, 'getAllBooksFromWishlists']);
+Route::post('deleteBookFromWishlists', [WishlistController::class, 'deleteBookFromWishlists']);
 
 

@@ -14,13 +14,19 @@ return new class extends Migration
     public function up()
     {
         Schema::create('books', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->unsignedInteger('user_id')->index()->default(1);
             $table->string('name');
             $table->string('description', 1000);
             $table->string('author');
             $table->string('image');
             $table->integer('price');
-            $table->integer('quantity');
+            $table->unsignedInteger('quantity');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->timestamps();
         });
     }

@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
 
+
 class UserController extends Controller
 {
 
@@ -22,10 +23,11 @@ class UserController extends Controller
      *            mediaType="multipart/form-data",
      *            @OA\Schema(
      *               type="object",
-     *               required={"role","first_name","last_name","email","password","confirm_password"},
+     *               required={"role","first_name","last_name","phoneNumber","email","password","confirm_password"},
      *               @OA\Property(property="role", type="string"),
      *               @OA\Property(property="first_name", type="string"),
      *               @OA\Property(property="last_name", type="string"),
+     *               @OA\Property(property="phoneNumber", type="integer"),
      *               @OA\Property(property="email", type="string"),
      *               @OA\Property(property="password", type="string"),
      *               @OA\Property(property="confirm_password", type="string"),
