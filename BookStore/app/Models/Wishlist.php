@@ -16,4 +16,5 @@ class Wishlist extends Model
         'book_id',
         'cart_id'
     ];
+    
 }

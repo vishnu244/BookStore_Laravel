@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\Book;
+use App\Models\User;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Book;
-use App\Models\Cart;
-use App\Models\User;
 use App\Http\Controllers\BookController;
+
+
 
 class CartController extends Controller
 {
@@ -41,18 +42,42 @@ class CartController extends Controller
             }
         }      
     }
-    public function deleteBookFromCart(Request $request){
+
+
+    public function display_Books_In_Cart(Request $request)
+    {
+        $book = Cart::all(); 
+        if($book)
+        {
+            return response()->json(['success' => $book],201);
+            Log::channel('custom')->info("Books Displayed successfully");
+
+        }
+        else
+        {
+            return response()->json(['Message' => "No Book found to display"],401);
+            Log::channel('custom')->info("No Book found to display");
+        }   
+    
+    }
+
+
+    public function removeBookFromCart(Request $request){
         $request->validate([
             'id' => 'required|integer'
         ]);
         $response = DB::table('cart')->where('id', $request->id)->delete();
         if($response){
-            return response()->json(["message"=>"Book removed from cart", "success"=>200]);
+            return response()->json(["message"=>"Book removed from cart"],200);
+            Log::channel('custom')->info("Book removed from cart");
         }
         else{
-            Log::channel('custom')->error("id is invalid");
+            return response()->json(['message'=>'No Book Found with that ID in Cart'],401);
+            Log::channel('custom')->error("No Book Found with that ID in Cart");
         }
     }
+
+
     public function updateBookInCart(Request $request){
         $request->validate([
             'id' => 'required',
@@ -71,22 +96,27 @@ class CartController extends Controller
             Log::channel('custom')->error("Book is not available");
         }
     }
-    public function getAllBooks(Request $request){
-        $books = Cart::all();
-        return $books;
-    }
-    public function updateQuantityInCart(Request $request){
+
+
+   
+
+
+    public function update_Quantity_In_Cart(Request $request)
+    {
         $request->validate([
             'id' =>'required|integer',
             'book_quantity' => 'required|integer'
         ]);
 
         $response = DB::table('cart')->where('id', $request->id)->update(['book_quantity'=>$request->book_quantity]);
-        if($response){
-            return response()->json(["message"=>"Quantity updated"]);
+        if($response)
+        {
+            return response()->json(['message'=>'Quantity of Books Updated Successfully'],201);
+            Log::channel('custom')->info("Quantity of Books Updated Successfully");
         }
         else{
-            Log::channel('custom')->error("id is invalid");
+            return response()->json(['message'=>'No book Found with that ID'],401);
+            Log::channel('custom')->info("No Book found with that ID");
         }
     }
 }

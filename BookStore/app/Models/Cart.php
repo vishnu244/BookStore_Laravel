@@ -16,4 +16,5 @@ class Cart extends Model
         'book_id',
         'book_quantity'
     ]);
+    
 }

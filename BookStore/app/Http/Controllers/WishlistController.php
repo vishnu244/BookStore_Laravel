@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Wishlist;
+
 
 class WishlistController extends Controller
 {
@@ -45,14 +45,24 @@ class WishlistController extends Controller
     }
 
 
-    public function getAllBooksFromWishlists()
+    public function displayBooksFromWishlists()
     {
-        $data = Wishlist::all();
-        return $data;
+        $wishlist = Wishlist::all();
+        if($wishlist)
+        {
+            return response()->json(['success' => $wishlist],201);
+            Log::channel('custom')->info("Success");
+        }
+        else
+        {
+            return response()->json(['Message' => "No Book found to display"],401);
+            Log::channel('custom')->info("No Book found to display");
+        }
     }
+    
 
 
-    public function deleteBookFromWishlists(Request $request)
+    public function removeBookFromWishlists(Request $request)
     {
         $request->validate([
             'id' => 'required|integer'
@@ -61,11 +71,13 @@ class WishlistController extends Controller
         $response = DB::table('wishlists')->where('id', $request->id)->delete();
         if($response)
         {   
-            return response()->json(["message"=>"Book removed from wishlists", "sussessststus"=>200]);
+            return response()->json(["message"=>"Book removed from wishlists"],201);
+            Log::channel('custom')->info("Book removed from wishlist");
         }
         else
         {
-            Log::channel('custom')->debug("Book not removed from wishlists");
+            return response()->json(['message'=>'No Book Found with that ID to Remove'],401);
+            Log::channel('custom')->info("No Book Found with that ID to Remove");
         }
     }
 }
