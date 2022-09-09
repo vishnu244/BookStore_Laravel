@@ -8,6 +8,8 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\AddressController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +47,12 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::post('addBookToWishlist', [WishlistController::class, 'addBookToWishlist']);
     Route::get('displayBooksFromWishlists', [WishlistController::class, 'displayBooksFromWishlists']);
     Route::delete('removeBookFromWishlists', [WishlistController::class, 'removeBookFromWishlists']);
+
+    Route::post('addAddress', [AddressController::class, 'addAddress']);
+    Route::post('updateAddressById', [AddressController::class, 'update_Address_Id']);
+    Route::get('displayAllAddresses', [AddressController::class, 'display_AllAddresses']);
+    Route::delete('deleteAddressByID', [AddressController::class, 'delete_Address_ID']);
+
     
 });
 
