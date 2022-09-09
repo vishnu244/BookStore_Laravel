@@ -11,46 +11,62 @@ use Illuminate\Support\Facades\Log;
 
 
 
-
-
 class BookController extends Controller
 {
     //----------API to Add Book----------
     public function addBook(Request $request){
-        
-        $request-> validate([
+        $request->validate([
             'name' => 'required | string',
-            'description' => 'required | string | max:1000',
+            'description' => 'required | string | min:5 | max:1000',
+            'image' => 'required | image | mimes:jpg,png,jpeg,gif,svg,webp | max:1024',  
             'author' => 'required | string', 
-            'image' => 'required | image | mimes:jpg,png,jpeg,gif,svg,webp | max:5MB',  
-            // 'image' => 'required | string',
             'price' => 'required | integer', 
             'quantity' => 'required | integer',
         ]);
 
+        $getUser = $request->user()->id;
+        $book = new Book();
+        $book->user_id = $getUser;
+        $book->name = $request->name;
+        $book->description = $request->description;
+        $book->author = $request->author;
+        $book->price = $request->price;
+        $book->quantity = $request->quantity;
 
-        $book = Book::create([
+       
+        $path = Storage::disk('s3')->put('images', $request->image);
+        $url = env('AWS_URL') . $path;
+        $book->image = $url;
 
-            'name' => $request->name,
-            'description' => $request->description,
-            'author' => $request->author,
-            'image' => $request->image,
-            'price' => $request->price,
-            'quantity' => $request->quantity
-
-        ]);
-        
-
-        return response()->json([
-            'message' => 'Book Added Successfully',
-            'book' => $book
-        ], 200);
-        Log::channel('custom')->info("Book Added successfully");
-
+        $book->save();
+        $response = $book;
+        return response()->json(['message' => 'Book Added Successfully','book' => $book],201);
+        Log::channel('custom')->info("Book is added sucessfully");
     }
+       
+// -----------API Function to Update Books by ID--------------
+public function update_Book_ID(Request $request)
+{
+    $request->validate([
+        'id' => 'required',
+        'name' => 'required | string | min:4',
+        'description' => 'required | string | min:5 | max:1000',
+        'author' => 'required | string', 
+        'image' => 'required',  
+        'price' => 'required | integer', 
+    ]);
+    $data = DB::table('books')->where('id', $request->id)->update(['name'=>$request->name, 
+        'description'=>$request->description, 
+        'author'=>$request->author, 
+        'price'=>$request->price, 'quantity'=>$request->quantity, 'image'=>$request->image]);
+    
+    return response()->json(['message'=>'Book Updated Successfully'],200);
+    Log::channel('custom')->info("Book Updated Successfully");
+}
 
 
-    /**
+
+/**
      * @OA\GET(
      *   path="/api/displayBooks",
      *   summary="Display Books",
@@ -66,26 +82,24 @@ class BookController extends Controller
      */
 
     // -----------API Function to display Books-------------------
-    public function display_Books()
+public function display_Books()
+{
+    $book = Book::all();
+    if($book)
     {
-        $book = Book::all();
-        if($book)
-        {
-            return response()->json(['success' => $book],201);
-            Log::channel('custom')->info("Books Displayed successfully");
+        return response()->json(['success' => $book],201);
+        Log::channel('custom')->info("Books Displayed successfully");
 
-        }
-        else
-        {
-            return response()->json(['Message' => "No Book found to display"],401);
-            Log::channel('custom')->info("No Book found to display");
-        }
     }
+    else
+    {
+         return response()->json(['Message' => "No Book found to display"],401);
+        Log::channel('custom')->info("No Book found to display");
+    }
+}
 
 
-
-
-    /**
+/**
      * @OA\GET(
      *   path="/api/displayBookbyID/{id}",
      *   summary="Display Books by ID",
@@ -118,46 +132,7 @@ class BookController extends Controller
     }
 
 
-
-    // -----------API Function to Update Books by ID--------------
-    public function update_Book_ID(Request $request, $id)
-    {
-       
-        //validating the data to make it not to be null
-        $request-> validate([
-            'name' => 'required | string',
-            'description' => 'required | string | max:1000',
-            'author' => 'required | string', 
-            // 'image' => 'required | image | mimes:jpg,png,jpeg,gif,svg,webp | max:5MB',  
-            'image' => 'required | string',
-            'price' => 'required | integer', 
-        ]);
-
-        $book = Book::find($id);
-        if($book)
-        {
-            $book->name = $request->name;
-            $book->description = $request->description;
-            $book->author = $request->author;
-            $book->image = $request->image;
-            $book->price = $request->price;
-            
-            $book ->update();
-            return response()->json(['message'=>'book Updated Successfully'],200);
-            Log::channel('custom')->info("book Updated Successfully");
-        }
-        else
-        {
-            return response()->json(['message'=>'No book Found with that ID'],404);
-            Log::channel('custom')->info("No Book found with that ID");
-
-        }
-      
-    }
-
-
-
-    /**
+/**
      * @OA\DELETE(
      *   path="/api/deleteBookID/{id}",
      *   summary="Delete Book",
@@ -190,8 +165,7 @@ class BookController extends Controller
     }
 
 
-
-      /**
+ /**
      * @OA\POST(
      *   path="/api/updateBookQuantitybyID",
      *   summary="Add Quantity to Existing Books",
@@ -239,10 +213,9 @@ class BookController extends Controller
         }
       
     }
-    
 
 
-    /**
+/**
      * @OA\POST(
      *   path="/api/searchBook",
      *   summary="Search Books",
@@ -288,8 +261,7 @@ class BookController extends Controller
     }
 
 
-
-    /**
+/**
      * @OA\GET(
      *   path="/api/sortByPriceLowToHigh",
      *   summary="Sort Books by price Low to High",
@@ -318,8 +290,7 @@ class BookController extends Controller
     }
 
 
-    
-    /**
+ /**
      * @OA\GET(
      *   path="/api/sortByPriceHighToLow",
      *   summary="Sort Books by price High to Low",
@@ -344,4 +315,7 @@ class BookController extends Controller
            Log::channel('custom')->info("No book Found to Display");
         }
     }
+
+
+
 }

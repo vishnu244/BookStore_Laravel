@@ -13,23 +13,31 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('books', function (Blueprint $table) 
-        {
+         Schema::create('wishlists', function (Blueprint $table) 
+         {
             $table->increments('id');
-            $table->unsignedInteger('user_id')->index();
-            $table->string('name');
-            $table->string('description', 1000);
-            $table->string('author');
-            $table->string('image');
-            $table->integer('price');
-            $table->unsignedInteger('quantity');
-            
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('book_id');
+            $table->unsignedInteger('cart_id');
+
+            $table->foreign('book_id')
+                ->references('id')
+                ->on('books')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
+            $table->foreign('cart_id')
+                ->references('id')
+                ->on('cart')
+                ->onDelete('cascade')
+                ->onUpdate('cascade'); 
+                   
             $table->timestamps();
         });
     }
@@ -41,6 +49,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('books');
+        Schema::dropIfExists('wishlists');
     }
 };

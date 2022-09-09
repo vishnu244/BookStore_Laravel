@@ -46,14 +46,13 @@ Route::GET('sortByPriceLowToHigh',[BookController::class,'sortBooks_Price_LowToH
 Route::GET('sortByPriceHighToLow',[BookController::class,'sortBook_Price_HighToLow']);
 
 Route::post('addBookTocart',[CartController::class, 'addBookTocart']);
-Route::post('deleteBookFromCart',[CartController::class, 'deleteBookFromCart']);
-Route::get('getAllBooks',[CartController::class, 'getAllBooks']);
+Route::get('displayAllBooksInCart',[CartController::class, 'displayAllBooksInCart']);
+Route::delete('deleteBookFromCart',[CartController::class, 'deleteBookFromCart']);
 Route::post('updateBookInCart',[CartController::class, 'updateBookInCart']);
 Route::post('updateQuantityInCart',[CartController::class, 'updateQuantityInCart']);
 
 
 Route::post('addBookToWishlist', [WishlistController::class, 'addBookToWishlist']);
-Route::get('getAllBooksFromWishlists', [WishlistController::class, 'getAllBooksFromWishlists']);
-Route::post('deleteBookFromWishlists', [WishlistController::class, 'deleteBookFromWishlists']);
-
+Route::get('displayBooksFromWishlists', [WishlistController::class, 'displayBooksFromWishlists']);
+Route::delete('removeBookFromWishlists', [WishlistController::class, 'removeBookFromWishlists']);
 
