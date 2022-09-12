@@ -9,6 +9,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\OrderController;
 
 
 /*
@@ -52,7 +53,11 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::post('updateAddressById', [AddressController::class, 'update_Address_Id']);
     Route::get('displayAllAddresses', [AddressController::class, 'display_AllAddresses']);
     Route::delete('deleteAddressByID', [AddressController::class, 'delete_Address_ID']);
+    
+    Route::post('placeOrder', [OrderController::class, 'placeOrder']);
+    Route::post('cancelOrder', [OrderController::class, 'cancelOrder']);
 
+    
     
 });
 

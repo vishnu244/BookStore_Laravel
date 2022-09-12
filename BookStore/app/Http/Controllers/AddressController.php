@@ -84,19 +84,18 @@ class AddressController extends Controller
         }
     }
 
-    public function delete_Address_ID(Request $request, $id){
-        $Address = Address::find($id);
-        if($Address)
-        {
-            $Address ->delete();
-            return response()->json(['message'=>'Address Deleted Successfully'],201);
-            Log::channel('custom')->info("Address Deleted Successfully");
+   
+    public function delete_Address_ID(Request $request){
+        $request->validate([
+            'id'=>'required|integer'
+        ]);
+
+        $response = DB::table('addresses')->where('id', $request->id)->delete();
+        if($response){
+            return response()->json(["message"=>"Address deleted"],201);
         }
-        else
-        {
-            return response()->json(['message'=>'No Address Found with that ID'],401);
-            Log::channel('custom')->info("No Address found with that ID");
+        else{
+            Log::channel('custom')->error("You entered invalid id");
         }
     }
-
 }

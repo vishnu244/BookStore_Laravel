@@ -49,7 +49,7 @@ class UserController extends Controller
     {
         $userData=User::where('email',$request->email)->first();
         if($userData){
-            Log::channel('custom')->debug("the email has already registered");
+            Log::channel('custom')->info("the email has already registered");
         }
         $user=User::create([
             'role'=>$request->role,

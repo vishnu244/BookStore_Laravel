@@ -31,12 +31,13 @@ class BookController extends Controller
         $book->description = $request->description;
         $book->author = $request->author;
         $book->price = $request->price;
+        $book->image = $request->image;
         $book->quantity = $request->quantity;
 
        
-        $path = Storage::disk('s3')->put('images', $request->image);
-        $url = env('AWS_URL') . $path;
-        $book->image = $url;
+        // $path = Storage::disk('s3')->put('images', $request->image);
+        // $url = env('AWS_URL') . $path;
+        // $book->image = $url;
 
         $book->save();
         $response = $book;
