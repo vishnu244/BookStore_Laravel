@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+
 
 class UserController extends Controller
 {
 
-    /**
+        /**
      * @OA\Post(
      *   path="/api/registration",
      *   summary="User Registration",
@@ -20,10 +22,11 @@ class UserController extends Controller
      *            mediaType="multipart/form-data",
      *            @OA\Schema(
      *               type="object",
-     *               required={"role","first_name","last_name","email","password","confirm_password"},
+     *               required={"role","first_name","last_name","phoneNumber","email","password","confirm_password"},
      *               @OA\Property(property="role", type="string"),
      *               @OA\Property(property="first_name", type="string"),
      *               @OA\Property(property="last_name", type="string"),
+     *               @OA\Property(property="phoneNumber", type="integer"),
      *               @OA\Property(property="email", type="string"),
      *               @OA\Property(property="password", type="string"),
      *               @OA\Property(property="confirm_password", type="string"),
@@ -43,33 +46,32 @@ class UserController extends Controller
 
     //API for Registration
     public function Registerdata(Request $request)
-    { 
-        $data = $request-> validate([
-            'role' => 'required|string',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|email|max:100|unique:users,email',
-            'password' => 'required|string',
-            'confirm_password' => 'required|string'
+    {
+        $userData=User::where('email',$request->email)->first();
+        if($userData){
+            Log::channel('custom')->info("the email has already registered");
+        }
+        $user=User::create([
+            'role'=>$request->role,
+            'first_name'=>$request->first_name,
+            'last_name'=>$request->last_name,
+            'phoneNumber'=>$request->phoneNumber,
+            'email'=>$request->email,
+            'password'=>bcrypt($request->password),
+            'confirmPassword'=>bcrypt($request->confirmPassword)
+            
         ]);
-        $user = User::create([
-            'role' => $data['role'],
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'confirm_password' => Hash::make($data['confirm_password']),           
-        ]);
-
+        
         $token = $user->createToken('Token')->plainTextToken;
 
         $response = [
             'user'=>$user,
             'token'=>$token,
         ];
+        Log::channel('custom')->info("Data Registered succesfully");
         return response($response,201);
     }
-
+   
 
     /**
      * @OA\Post(
@@ -101,8 +103,7 @@ class UserController extends Controller
      //API for Login
     public function login(Request $request)
     {
-        $data = $request-> validate([
-            
+        $data = $request-> validate([          
             'email' => 'required|email|max:100|',
             'password' => 'required|string',
         ]);
@@ -111,6 +112,7 @@ class UserController extends Controller
 
         if(!$user || !Hash::check($data['password'], $user->password))
         {
+            Log::channel('custom')->error("Invalid Credentials to Login");
             return response(['message' => 'Invalid Credentials'], 401);
         }
         else
@@ -120,15 +122,19 @@ class UserController extends Controller
                 'user' => $user,
                 'token' => $token,
             ];
+            Log::channel('custom')->info("Login succesfull");
             return response($response, 200);
         }
+
     }
 
 
     //API for Logout
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message'=>"User logged out successfully", "SussceeStatus"=>200]);
+        return response()->json(['message'=>"User logged out successfully"],201);
+        Log::channel('custom')->info("Logged out succesfully");
     }
-      
+    
 }
