@@ -56,7 +56,7 @@ Route::middleware(['auth:sanctum'])->group(function(){
     
     Route::post('placeOrder', [OrderController::class, 'placeOrder']);
     Route::post('cancelOrder', [OrderController::class, 'cancelOrder']);
-
+    Route::get('getBookById', [OrderController::class, 'getBookById']);
     
     
 });

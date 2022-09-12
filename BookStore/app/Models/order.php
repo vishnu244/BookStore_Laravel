@@ -22,4 +22,6 @@ class order extends Model
         'total_price',
         'order_id'
     ];
+
 }
+

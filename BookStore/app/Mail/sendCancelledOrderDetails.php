@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class sendOrderDetails extends Mailable
+class sendCancelledOrderDetails extends Mailable
 {
     use Queueable, SerializesModels;
     public $orderId;
@@ -26,6 +26,8 @@ class sendOrderDetails extends Mailable
     public function __construct($getUser, $order, $book)
     {
         $this->bookName = $book->name;
+       
+        
         $this->bookAuthor = $book->author;
         $this->bookPrice = $book->price;
         $this->quantity = $book->quantity;
@@ -41,8 +43,9 @@ class sendOrderDetails extends Mailable
      */
     public function build()
     {
-        return $this->markdown('orderDetails')->with([
-            
+        return $this->markdown('cancelledOrderDetails')->with([
+            // 'token' => $this->token,
+            // 'email' => $this->email
             'user' => $this->user,
             'orderId' => $this->orderId,
             'bookName' => $this->bookName,
